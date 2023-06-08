@@ -23,7 +23,21 @@ import importlib
 
 # config_private.py放自己的秘密如API和代理网址
 # 读取时首先看是否存在私密的config_private配置文件（不受git管控），如果有，则覆盖原config文件
-from toolbox import get_conf
+# from toolbox import get_conf
+
+def get_conf(*args):
+    # 建议您复制一个config_private.py放自己的秘密, 如API和代理网址, 避免不小心传github被别人看到
+    res = []
+    for arg in args:
+        try: r = getattr(importlib.import_module('config_private'), arg)
+        except: r = getattr(importlib.import_module('config'), arg)
+        res.append(r)
+        # 在读取API_KEY时，检查一下是不是忘了改config
+        if arg=='API_KEY' and len(r) != 51:
+            assert False, "正确的API_KEY密钥是51位，请在config文件中修改API密钥, 添加海外代理之后再运行。" + \
+                        "（如果您刚更新过代码，请确保旧版config_private文件中没有遗留任何新增键值）"
+    return res
+
 proxies, API_URL, API_KEY, TIMEOUT_SECONDS, MAX_RETRY, LLM_MODEL = \
     get_conf('proxies', 'API_URL', 'API_KEY', 'TIMEOUT_SECONDS', 'MAX_RETRY', 'LLM_MODEL')
 
@@ -40,6 +54,8 @@ def get_full_error(chunk, stream_response):
         except:
             break
     return chunk
+
+
 
 def predict(inputs, history=[],top_p=1, temperature = 0.6, sys_prompt=""):
     """
