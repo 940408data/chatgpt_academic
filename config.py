@@ -1,5 +1,5 @@
 # API_KEY = "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" 此key无效
-API_KEY = "sk-此处填API密钥"
+API_KEY = "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"
 API_URL = "https://api.openai.com/v1/chat/completions"
 
 # 改为True应用代理
@@ -23,7 +23,7 @@ else:
 TIMEOUT_SECONDS = 25
 
 # 网页的端口, -1代表随机端口
-WEB_PORT = -1
+WEB_PORT = 4567
 
 # 如果OpenAI不响应（网络卡顿、代理失败、KEY失效），重试的次数限制
 MAX_RETRY = 2
